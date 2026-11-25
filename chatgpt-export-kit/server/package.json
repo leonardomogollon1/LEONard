@@ -1,0 +1,22 @@
+{
+  "name": "chatgpt-export-mcp-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Servidor MCP (Streamable HTTP + OAuth 2.1) con las herramientas export_conversation y export_project.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20.0.0" },
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "start:stdio": "node index.js --stdio",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "chatgpt-export-skill": "1.0.0",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.2.1",
+    "zod": "^4.6.7"
+  }
+}

@@ -1,0 +1,598 @@
+{
+  "id": "00000000-0000-4000-8000-000000000001",
+  "conversation_id": "00000000-0000-4000-8000-000000000001",
+  "title": "Fixture sintético: ETL con versiones",
+  "create_time": 1764000000,
+  "update_time": 1764000630,
+  "mapping": {
+    "root": {
+      "id": "root",
+      "parent": null,
+      "children": [
+        "sys"
+      ],
+      "message": null
+    },
+    "sys": {
+      "id": "sys",
+      "parent": "root",
+      "children": [
+        "ctx"
+      ],
+      "message": {
+        "id": "sys",
+        "author": {
+          "role": "system",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000030,
+        "update_time": null,
+        "content": {
+          "content_type": "text",
+          "parts": [
+            ""
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": null,
+        "weight": 1,
+        "metadata": {
+          "is_visually_hidden_from_conversation": true
+        },
+        "recipient": "all"
+      }
+    },
+    "ctx": {
+      "id": "ctx",
+      "parent": "sys",
+      "children": [
+        "u1"
+      ],
+      "message": {
+        "id": "ctx",
+        "author": {
+          "role": "user",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000060,
+        "update_time": null,
+        "content": {
+          "content_type": "user_editable_context",
+          "user_profile": "Ingeniero de datos",
+          "user_instructions": "Responde en español."
+        },
+        "status": "finished_successfully",
+        "end_turn": null,
+        "weight": 1,
+        "metadata": {
+          "is_visually_hidden_from_conversation": true
+        },
+        "recipient": "all"
+      }
+    },
+    "u1": {
+      "id": "u1",
+      "parent": "ctx",
+      "children": [
+        "a1",
+        "a1b"
+      ],
+      "message": {
+        "id": "u1",
+        "author": {
+          "role": "user",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000090,
+        "update_time": null,
+        "content": {
+          "content_type": "text",
+          "parts": [
+            "Escribe un script `etl.py` que lea un CSV y calcule la media por columna."
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": null,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "all"
+      }
+    },
+    "a1": {
+      "id": "a1",
+      "parent": "u1",
+      "children": [
+        "u2"
+      ],
+      "message": {
+        "id": "a1",
+        "author": {
+          "role": "assistant",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000120,
+        "update_time": null,
+        "content": {
+          "content_type": "text",
+          "parts": [
+            "Aquí tienes una primera versión.\n\n**etl.py**\n```python\nimport csv\n\ndef medias(path):\n    with open(path) as f:\n        rows = list(csv.DictReader(f))\n    return {k: sum(float(r[k]) for r in rows) / len(rows) for k in rows[0]}\n```\n\nEjecuta `python etl.py`."
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": true,
+        "weight": 1,
+        "metadata": {
+          "model_slug": "gpt-5"
+        },
+        "recipient": "all"
+      }
+    },
+    "a1b": {
+      "id": "a1b",
+      "parent": "u1",
+      "children": [],
+      "message": {
+        "id": "a1b",
+        "author": {
+          "role": "assistant",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000150,
+        "update_time": null,
+        "content": {
+          "content_type": "text",
+          "parts": [
+            "Versión regenerada:\n\n```python\n# etl.py\nimport pandas as pd\n\ndef medias(path):\n    df = pd.read_csv(path)\n    return df.mean(numeric_only=True).to_dict()\n```"
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": true,
+        "weight": 1,
+        "metadata": {
+          "model_slug": "gpt-5"
+        },
+        "recipient": "all"
+      }
+    },
+    "u2": {
+      "id": "u2",
+      "parent": "a1",
+      "children": [
+        "th"
+      ],
+      "message": {
+        "id": "u2",
+        "author": {
+          "role": "user",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000180,
+        "update_time": null,
+        "content": {
+          "content_type": "text",
+          "parts": [
+            "Mejóralo: maneja valores vacíos y añade CLI."
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": null,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "all"
+      }
+    },
+    "th": {
+      "id": "th",
+      "parent": "u2",
+      "children": [
+        "a2"
+      ],
+      "message": {
+        "id": "th",
+        "author": {
+          "role": "assistant",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000210,
+        "update_time": null,
+        "content": {
+          "content_type": "thoughts",
+          "thoughts": [
+            {
+              "summary": "Planificando mejoras",
+              "content": "Ignorar celdas vacías y usar argparse."
+            }
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": true,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "all"
+      }
+    },
+    "a2": {
+      "id": "a2",
+      "parent": "th",
+      "children": [
+        "u3"
+      ],
+      "message": {
+        "id": "a2",
+        "author": {
+          "role": "assistant",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000240,
+        "update_time": null,
+        "content": {
+          "content_type": "text",
+          "parts": [
+            "### Versión mejorada\n\n- Ignora celdas vacías\n- Añade CLI con argparse\n\n**etl.py**\n```python\nimport csv\nimport argparse\n\ndef medias(path):\n    with open(path) as f:\n        rows = list(csv.DictReader(f))\n    out = {}\n    for k in rows[0]:\n        vals = [float(r[k]) for r in rows if r[k].strip()]\n        out[k] = sum(vals) / len(vals) if vals else None\n    return out\n\nif __name__ == \"__main__\":\n    p = argparse.ArgumentParser()\n    p.add_argument(\"csv\")\n    print(medias(p.parse_args().csv))\n```"
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": true,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "all"
+      }
+    },
+    "u3": {
+      "id": "u3",
+      "parent": "a2",
+      "children": [
+        "c1"
+      ],
+      "message": {
+        "id": "u3",
+        "author": {
+          "role": "user",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000270,
+        "update_time": null,
+        "content": {
+          "content_type": "text",
+          "parts": [
+            "Crea un informe en canvas con los resultados."
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": null,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "all"
+      }
+    },
+    "c1": {
+      "id": "c1",
+      "parent": "u3",
+      "children": [
+        "c1t"
+      ],
+      "message": {
+        "id": "c1",
+        "author": {
+          "role": "assistant",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000300,
+        "update_time": null,
+        "content": {
+          "content_type": "code",
+          "language": "json",
+          "text": "{\"name\":\"Informe ETL\",\"type\":\"document\",\"content\":\"# Informe ETL\\n\\nResultados preliminares.\\n\\nConclusión: pendiente.\"}"
+        },
+        "status": "finished_successfully",
+        "end_turn": true,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "canmore.create_textdoc"
+      }
+    },
+    "c1t": {
+      "id": "c1t",
+      "parent": "c1",
+      "children": [
+        "u4"
+      ],
+      "message": {
+        "id": "c1t",
+        "author": {
+          "role": "tool",
+          "name": "canmore.create_textdoc",
+          "metadata": {}
+        },
+        "create_time": 1764000330,
+        "update_time": null,
+        "content": {
+          "content_type": "text",
+          "parts": [
+            "Successfully created text document"
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": null,
+        "weight": 1,
+        "metadata": {
+          "canvas": {
+            "textdoc_id": "doc123",
+            "version": 1
+          }
+        },
+        "recipient": "all"
+      }
+    },
+    "u4": {
+      "id": "u4",
+      "parent": "c1t",
+      "children": [
+        "c2"
+      ],
+      "message": {
+        "id": "u4",
+        "author": {
+          "role": "user",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000360,
+        "update_time": null,
+        "content": {
+          "content_type": "text",
+          "parts": [
+            "Mejora la conclusión."
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": null,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "all"
+      }
+    },
+    "c2": {
+      "id": "c2",
+      "parent": "u4",
+      "children": [
+        "c2t"
+      ],
+      "message": {
+        "id": "c2",
+        "author": {
+          "role": "assistant",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000390,
+        "update_time": null,
+        "content": {
+          "content_type": "code",
+          "language": "json",
+          "text": "{\"updates\":[{\"pattern\":\"Conclusión: pendiente\\\\.\",\"multiple\":false,\"replacement\":\"Conclusión: la columna B presenta la media más alta (4,2).\"}]}"
+        },
+        "status": "finished_successfully",
+        "end_turn": true,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "canmore.update_textdoc"
+      }
+    },
+    "c2t": {
+      "id": "c2t",
+      "parent": "c2",
+      "children": [
+        "py"
+      ],
+      "message": {
+        "id": "c2t",
+        "author": {
+          "role": "tool",
+          "name": "canmore.update_textdoc",
+          "metadata": {}
+        },
+        "create_time": 1764000420,
+        "update_time": null,
+        "content": {
+          "content_type": "text",
+          "parts": [
+            "Successfully updated text document"
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": null,
+        "weight": 1,
+        "metadata": {
+          "canvas": {
+            "textdoc_id": "doc123",
+            "version": 2
+          }
+        },
+        "recipient": "all"
+      }
+    },
+    "py": {
+      "id": "py",
+      "parent": "c2t",
+      "children": [
+        "pyo"
+      ],
+      "message": {
+        "id": "py",
+        "author": {
+          "role": "assistant",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000450,
+        "update_time": null,
+        "content": {
+          "content_type": "code",
+          "language": "python",
+          "text": "import pandas as pd\npd.DataFrame({\"a\":[1]}).to_csv(\"/mnt/data/medias.csv\")"
+        },
+        "status": "finished_successfully",
+        "end_turn": true,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "python"
+      }
+    },
+    "pyo": {
+      "id": "pyo",
+      "parent": "py",
+      "children": [
+        "a3"
+      ],
+      "message": {
+        "id": "pyo",
+        "author": {
+          "role": "tool",
+          "name": "python",
+          "metadata": {}
+        },
+        "create_time": 1764000480,
+        "update_time": null,
+        "content": {
+          "content_type": "execution_output",
+          "text": "OK"
+        },
+        "status": "finished_successfully",
+        "end_turn": null,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "all"
+      }
+    },
+    "a3": {
+      "id": "a3",
+      "parent": "pyo",
+      "children": [
+        "img"
+      ],
+      "message": {
+        "id": "a3",
+        "author": {
+          "role": "assistant",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": null,
+        "update_time": null,
+        "content": {
+          "content_type": "text",
+          "parts": [
+            "He generado el archivo: [medias.csv](sandbox:/mnt/data/medias.csv)"
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": true,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "all"
+      }
+    },
+    "img": {
+      "id": "img",
+      "parent": "a3",
+      "children": [
+        "u5"
+      ],
+      "message": {
+        "id": "img",
+        "author": {
+          "role": "tool",
+          "name": "dalle.text2im",
+          "metadata": {}
+        },
+        "create_time": 1764000510,
+        "update_time": null,
+        "content": {
+          "content_type": "multimodal_text",
+          "parts": [
+            {
+              "content_type": "image_asset_pointer",
+              "asset_pointer": "file-service://file-IMG123",
+              "width": 1024,
+              "height": 1024
+            }
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": null,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "all"
+      }
+    },
+    "u5": {
+      "id": "u5",
+      "parent": "img",
+      "children": [
+        "a5"
+      ],
+      "message": {
+        "id": "u5",
+        "author": {
+          "role": "user",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000540,
+        "update_time": null,
+        "content": {
+          "content_type": "text",
+          "parts": [
+            "Gracias 😀 — ¿alguna nota final?"
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": null,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "all"
+      }
+    },
+    "a5": {
+      "id": "a5",
+      "parent": "u5",
+      "children": [],
+      "message": {
+        "id": "a5",
+        "author": {
+          "role": "assistant",
+          "name": null,
+          "metadata": {}
+        },
+        "create_time": 1764000570,
+        "update_time": null,
+        "content": {
+          "content_type": "text",
+          "parts": [
+            "Nota con cita citeturn0search1 y tabla:\n\n| Col | Media |\n|---|---|\n| A | 3,1 |\n| B | 4,2 |\n\n> Revisión pendiente de validación humana."
+          ]
+        },
+        "status": "finished_successfully",
+        "end_turn": true,
+        "weight": 1,
+        "metadata": {},
+        "recipient": "all"
+      }
+    }
+  },
+  "current_node": "a5",
+  "default_model_slug": "gpt-5",
+  "gizmo_id": null,
+  "is_archived": false
+}

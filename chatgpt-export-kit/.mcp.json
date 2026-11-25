@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "chatgpt-export": {
+      "type": "http",
+      "url": "https://YOUR-HOST.example.com/mcp"
+    }
+  }
+}

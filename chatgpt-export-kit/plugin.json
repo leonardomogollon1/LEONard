@@ -1,0 +1,15 @@
+{
+  "name": "chatgpt-export",
+  "version": "1.0.0",
+  "description": "Exporta conversaciones y proyectos de ChatGPT a DOCX, PDF y un ZIP organizado (documentos, outputs versionados y metadatos).",
+  "author": { "name": "REEMPLAZAR" },
+  "license": "MIT",
+  "keywords": ["chatgpt", "export", "docx", "pdf", "zip", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "ChatGPT Export",
+    "shortDescription": "Exporta conversaciones y proyectos de ChatGPT a DOCX, PDF y ZIP.",
+    "category": "Productivity"
+  }
+}

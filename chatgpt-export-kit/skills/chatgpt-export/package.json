@@ -1,0 +1,35 @@
+{
+  "name": "chatgpt-export-skill",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Exporta conversaciones y proyectos de ChatGPT a DOCX, PDF y ZIP organizado.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "bin": {
+    "chatgpt-export": "scripts/export.js"
+  },
+  "exports": {
+    "./pipeline": "./scripts/lib/pipeline.js",
+    "./offline": "./scripts/lib/offline.js",
+    "./errors": "./scripts/lib/errors.js",
+    "./auth": "./scripts/lib/auth.js",
+    "./target": "./scripts/lib/target.js",
+    "./client": "./scripts/lib/client.js"
+  },
+  "scripts": {
+    "export": "node scripts/export.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.100",
+    "archiver": "^8.0.0",
+    "docx": "^9.16.0",
+    "pretext-pdf": "2.2.6"
+  },
+  "overrides": {
+    "@cantoo/pdf-lib": "2.7.4"
+  }
+}

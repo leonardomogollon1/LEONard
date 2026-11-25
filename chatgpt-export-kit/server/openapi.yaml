@@ -1,0 +1,187 @@
+openapi: 3.1.0
+info:
+  title: ChatGPT Export API
+  version: 1.0.0
+  description: |
+    Exporta conversaciones y proyectos de ChatGPT a DOCX, PDF y un ZIP organizado
+    (documentos/, outputs/, metadatos/resumen.json). Las mismas operaciones se exponen como
+    herramientas MCP (`export_conversation`, `export_project`) en `POST /mcp` (Streamable HTTP).
+
+    Autorización: OAuth 2.1, Authorization Code + PKCE (S256), registro dinámico de clientes
+    (RFC 7591), metadatos RFC 8414 / RFC 9728 e indicador de recurso RFC 8707
+    (`resource=<PUBLIC_BASE_URL>/mcp`). Durante el consentimiento el usuario vincula su
+    credencial de ChatGPT, que el servidor guarda cifrada.
+
+    Fuente de datos: backend web no documentado de chatgpt.com (no es una API pública de OpenAI).
+servers:
+  - url: https://YOUR-HOST.example.com
+    description: Sustituir por PUBLIC_BASE_URL
+security:
+  - oauth2: [export]
+paths:
+  /api/v1/export/conversation:
+    post:
+      operationId: export_conversation
+      summary: Exportar una conversación
+      description: |
+        Descarga la conversación completa (todos los nodos: sistema, ocultos, herramientas, ramas
+        alternativas), la ordena cronológicamente, detecta outputs y agrupa sus versiones mejoradas,
+        genera DOCX + PDF y devuelve un enlace temporal firmado al ZIP.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ExportConversationRequest' }
+            example:
+              conversation: https://chatgpt.com/c/6741f0c2-1234-4abc-8def-0123456789ab
+      responses:
+        '200': { $ref: '#/components/responses/ExportOk' }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/Error' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '502': { $ref: '#/components/responses/Error' }
+  /api/v1/export/project:
+    post:
+      operationId: export_project
+      summary: Exportar un proyecto completo
+      description: Exporta todas las conversaciones de un Proyecto de ChatGPT en un único ZIP (una carpeta por conversación).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ExportProjectRequest' }
+            example:
+              project: https://chatgpt.com/g/g-p-0123456789abcdef0123456789abcdef-mi-proyecto/project
+      responses:
+        '200': { $ref: '#/components/responses/ExportOk' }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/Error' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '502': { $ref: '#/components/responses/Error' }
+  /downloads/{name}:
+    get:
+      operationId: download_export
+      summary: Descargar el ZIP (enlace temporal firmado)
+      security: []
+      parameters:
+        - { name: name, in: path, required: true, schema: { type: string, pattern: '^export_[A-Za-z0-9._-]+\.zip$' } }
+        - { name: exp, in: query, required: true, schema: { type: integer }, description: Caducidad (epoch s) }
+        - { name: sig, in: query, required: true, schema: { type: string }, description: HMAC-SHA256 base64url }
+      responses:
+        '200':
+          description: ZIP
+          content:
+            application/zip:
+              schema: { type: string, format: binary }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: Authorization Code + PKCE (S256 obligatorio). Registro dinámico en /register.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://YOUR-HOST.example.com/authorize
+          tokenUrl: https://YOUR-HOST.example.com/token
+          refreshUrl: https://YOUR-HOST.example.com/token
+          scopes:
+            export: Leer conversaciones/proyectos de ChatGPT y generar exportaciones
+  schemas:
+    ExportOptions:
+      type: object
+      properties:
+        include_pdf: { type: boolean, default: true }
+        include_docx: { type: boolean, default: true }
+        download_attachments: { type: boolean, default: true }
+    ExportConversationRequest:
+      allOf:
+        - $ref: '#/components/schemas/ExportOptions'
+        - type: object
+          required: [conversation]
+          properties:
+            conversation:
+              type: string
+              description: URL https://chatgpt.com/c/<uuid>, URL de conversación dentro de proyecto, o UUID
+    ExportProjectRequest:
+      allOf:
+        - $ref: '#/components/schemas/ExportOptions'
+        - type: object
+          required: [project]
+          properties:
+            project:
+              type: string
+              description: URL .../g/g-p-<id>-<slug>/project, ID g-p-<id> o "project:<nombre exacto>"
+            max_conversations: { type: integer, minimum: 1, maximum: 500 }
+    ExportResult:
+      type: object
+      required: [download_url, expires_at, file_name, bytes, sha256, export_id, complete, totals]
+      properties:
+        download_url: { type: string, format: uri, description: Enlace temporal firmado }
+        expires_at: { type: string, format: date-time }
+        file_name: { type: string, example: export_6741f0c2-…_20261125T154200Z.zip }
+        bytes: { type: integer }
+        sha256: { type: string }
+        export_id: { type: string }
+        complete: { type: boolean, description: false si algún mensaje, documento o adjunto no pudo exportarse }
+        totals:
+          type: object
+          properties:
+            conversaciones: { type: integer }
+            mensajes: { type: integer }
+            outputsDetectados: { type: integer }
+            versionesDeOutputs: { type: integer }
+            adjuntosDescargados: { type: integer }
+            adjuntosFallidos: { type: integer }
+            versionesDuplicadasOmitidas: { type: integer }
+        conversations:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: [string, 'null'] }
+              title: { type: string }
+              messages: { type: integer }
+              outputs: { type: integer }
+        errors: { type: array, items: { type: object } }
+        warnings: { type: array, items: { type: object } }
+        failed_attachments: { type: integer }
+    Error:
+      type: object
+      required: [error, message]
+      properties:
+        error:
+          type: string
+          enum: [INVALID_INPUT, TOKEN_EXPIRED, NOT_FOUND, RATE_LIMITED, QUOTA_EXCEEDED, CF_CHALLENGE, UPSTREAM_ERROR, EXPORT_ERROR, EMPTY_PROJECT, EXPORT_FAILED, FORBIDDEN]
+        message: { type: string }
+        remediation: { type: string }
+        details: { type: object }
+  responses:
+    ExportOk:
+      description: Exportación generada
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ExportResult' }
+    Error:
+      description: Error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Token MCP ausente/caducado, o credencial de ChatGPT caducada (re-autorizar)
+      headers:
+        WWW-Authenticate:
+          schema: { type: string }
+          description: 'Bearer error="invalid_token", resource_metadata="…/.well-known/oauth-protected-resource/mcp"'
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    RateLimited:
+      description: Rate limit de ChatGPT persistente o cuota del servidor
+      headers:
+        Retry-After: { schema: { type: integer } }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
